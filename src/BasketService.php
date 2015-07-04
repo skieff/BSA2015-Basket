@@ -53,6 +53,34 @@ class BasketService {
     }
 
     /**
+     * @param string|array $idOrData
+     * @return Basket
+     * @throws Exception\BasketNotFound
+     */
+    public function findBasket($idOrData) {
+        return $this->_basketManager->findBasket($idOrData);
+    }
+
+    /**
+     * @param Basket $basket
+     * @return \CallbackFilterIterator|BasketItem[]
+     */
+    public function getBasketItems(Basket $basket) {
+        return array_map(
+            function(BasketItem $item) {return $item->getArrayCopy();},
+            iterator_to_array($this->_basketItemManager->getBasketItems($basket))
+        );
+    }
+
+    /**
+     * @param Basket|array $basketOrItemData
+     * @param Product|string|null $productOrId
+     */
+    public function findBasketItem($basketOrItemData, $productOrId = null) {
+        return $this->_basketItemManager->findBasketItem($basketOrItemData, $productOrId);
+    }
+
+    /**
      * @param array $data
      * @return Product
      */

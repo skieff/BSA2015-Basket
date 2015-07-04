@@ -31,6 +31,38 @@ class BasketItemManager extends AbstractManager {
         );
     }
 
+    /**
+     * @param Basket|array $basketOrItemData
+     * @param Product|string|null $productOrId
+     * @return BasketItem
+     * @throws BasketItemNotFound
+     */
+    public function findBasketItem($basketOrItemData, $productOrId = null) {
+        $data = [];
+
+        if ($basketOrItemData instanceof Basket) {
+            $data['basket'] = $basketOrItemData->getId();
+        } else {
+            $data = $basketOrItemData;
+        }
+
+        if ($productOrId instanceof Product) {
+            $data['product'] = $productOrId->getId();
+        } elseif (is_string($productOrId)) {
+            $data['product'] = $productOrId;
+        } else {
+            //do nothing
+        }
+
+        $item = $this->_getItem($data);
+
+        if (empty($item)) {
+            throw new BasketItemNotFound($this->_newInstance($data));
+        }
+
+        return $item;
+    }
+
     public function updateBasketItem(array $data) {
         /** @var BasketItem $basketItem */
         $basketItem = $this->_updateItem($data);
