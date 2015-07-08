@@ -56,7 +56,20 @@ class YamlStorage implements StorageInterface {
     }
 
     private function _loadFileData() {
-        return Yaml::parse(file_get_contents($this->_filePath));
+        if (false === ($fp = fopen($this->_filePath, 'c+'))) {
+            throw new \Exception('Cannot open file ' . $this->_filePath);
+        }
+
+        if (false === flock($fp, LOCK_SH)) {
+            throw new \Exception('Cannot lock file ' . $this->_filePath . ' for reading.');
+        }
+
+        $data = fread($fp, filesize($this->_filePath));
+
+        flock($fp, LOCK_UN);
+        fclose($fp);
+
+        return Yaml::parse($data);
     }
 
     public function store(array $basket, array $product, array $basketItem)
@@ -67,6 +80,17 @@ class YamlStorage implements StorageInterface {
             static::BASKET_ITEM => $basketItem,
         ];
 
-        file_put_contents($this->_filePath, Yaml::dump($this->_storage));
+        if (false === ($fp = fopen($this->_filePath, 'c+'))) {
+            throw new \Exception('Cannot open file ' . $this->_filePath);
+        }
+
+        if (false === flock($fp, LOCK_EX)) {
+            throw new \Exception('Cannot lock file ' . $this->_filePath . ' for reading.');
+        }
+
+        ftruncate($fp, 0);
+        fwrite($fp, Yaml::dump($this->_storage));
+        flock($fp, LOCK_UN);
+        fclose($fp);
     }
 }
