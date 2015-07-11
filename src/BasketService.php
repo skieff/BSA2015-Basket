@@ -81,29 +81,12 @@ class BasketService {
     }
 
     /**
-     * @param Basket|string $basketOrId
-     * @param Product|string $productOrId
-     * @return BasketItem
-     */
-    public function findBasketItem($basketOrId, $productOrId) {
-        $basket = ($basketOrId instanceof Basket) ? $basketOrId : $this->findBasket($basketOrId);
-        $product = ($productOrId instanceof Product) ? $productOrId : $this->findProduct($productOrId);
-
-        return $this->_basketItemManager->findBasketItem($basket, $product);
-    }
-
-    public function updateBasketItem(BasketItem $basketItem, array $data) {
-        return $this->_basketItemManager->updateBasketItem($basketItem, $data);
-    }
-
-    /**
      * @param array $data
      * @return Product
      */
     public function addProduct(array $data = []) {
         return $this->_productManager->addProduct($data);
     }
-
     /**
      * @param $idOrData
      * @return Product
@@ -124,5 +107,32 @@ class BasketService {
         $this->_basketManager->recalculateBasket($basket, $this->_basketItemManager->getBasketItems($basket));
 
         return $basketItem;
+    }
+
+    /**
+     * @param Basket|string $basketOrId
+     * @param Product|string $productOrId
+     * @return BasketItem
+     */
+    public function findBasketItem($basketOrId, $productOrId) {
+        $basket = ($basketOrId instanceof Basket) ? $basketOrId : $this->findBasket($basketOrId);
+        $product = ($productOrId instanceof Product) ? $productOrId : $this->findProduct($productOrId);
+
+        return $this->_basketItemManager->findBasketItem($basket, $product);
+    }
+
+    public function updateBasketItem(BasketItem $basketItem, array $data) {
+        return $this->_basketItemManager->updateBasketItem($basketItem, $data);
+    }
+
+
+    public function deleteBasketItem($basketOrId, $productOrId) {
+        $foundBasketItem = $this->_basketItemManager->findBasketItem($basketOrId, $productOrId);
+        $foundBasketItem = $this->_basketItemManager->deleteBasketItem($foundBasketItem);
+        $basket = $this->findBasket($foundBasketItem->basket);
+
+        $this->_basketManager->recalculateBasket($basket, $this->_basketItemManager->getBasketItems($basket));
+
+        return $foundBasketItem;
     }
 }

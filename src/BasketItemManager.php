@@ -66,6 +66,22 @@ class BasketItemManager extends AbstractManager {
         return $foundBasketItem;
     }
 
+
+    public function deleteBasketItem(BasketItem $basketItem) {
+        /** @var BasketItem $foundBasketItem */
+        $foundBasketItem = $this->_getItem($basketItem->getArrayCopy());
+
+        if (empty($foundBasketItem)) {
+            throw new BasketItemNotFound($basketItem);
+        }
+
+        if (isset($this->_storage[$foundBasketItem->getId()])) {
+            unset($this->_storage[$foundBasketItem->getId()]);
+        }
+
+        return $foundBasketItem;
+    }
+
     /**
      * @param array $data
      * @return string
