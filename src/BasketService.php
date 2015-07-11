@@ -127,7 +127,7 @@ class BasketService {
 
 
     public function deleteBasketItem($basketOrId, $productOrId) {
-        $foundBasketItem = $this->_basketItemManager->findBasketItem($basketOrId, $productOrId);
+        $foundBasketItem = $this->findBasketItem($basketOrId, $productOrId);
         $foundBasketItem = $this->_basketItemManager->deleteBasketItem($foundBasketItem);
         $basket = $this->findBasket($foundBasketItem->basket);
 
