@@ -63,13 +63,18 @@ abstract class AbstractManager {
      */
     protected function _updateItem(AbstractItem $existedItem, array $data)
     {
-        $foundItem = $this->_getItem($existedItem->getId());
+        $previousId = $existedItem->getId();
+        $foundItem = $this->_getItem($existedItem->getArrayCopy());
 
         if (empty($foundItem)) {
             return null;
         }
 
-        $foundItem->exchangeArray(array_merge($foundItem->getArrayCopy(), $data));
+        $foundItem->update($data);
+
+        if (isset($this->_storage[$previousId])) unset($this->_storage[$previousId]);
+
+        $this->_storage[$foundItem->getId()] = $foundItem;
 
         return $foundItem;
     }

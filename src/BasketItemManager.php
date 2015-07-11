@@ -22,7 +22,7 @@ class BasketItemManager extends AbstractManager {
 
     /**
      * @param Basket $basket
-     * @return \CallbackFilterIterator
+     * @return \CallbackFilterIterator|BasketItem[]
      */
     public function getBasketItems(Basket $basket) {
         return new \CallbackFilterIterator(
@@ -32,27 +32,16 @@ class BasketItemManager extends AbstractManager {
     }
 
     /**
-     * @param Basket|array $basketOrItemData
-     * @param Product|string|null $productOrId
+     * @param Basket $basket
+     * @param Product $product
      * @return BasketItem
      * @throws BasketItemNotFound
      */
-    public function findBasketItem($basketOrItemData, $productOrId = null) {
-        $data = [];
-
-        if ($basketOrItemData instanceof Basket) {
-            $data['basket'] = $basketOrItemData->getId();
-        } else {
-            $data = $basketOrItemData;
-        }
-
-        if ($productOrId instanceof Product) {
-            $data['product'] = $productOrId->getId();
-        } elseif (is_string($productOrId)) {
-            $data['product'] = $productOrId;
-        } else {
-            //do nothing
-        }
+    public function findBasketItem(Basket $basket, Product $product) {
+        $data = [
+            'basket' => $basket->getId(),
+            'product' => $product->getId(),
+        ];
 
         $item = $this->_getItem($data);
 
@@ -63,17 +52,17 @@ class BasketItemManager extends AbstractManager {
         return $item;
     }
 
-    public function updateBasketItem(array $data) {
-        /** @var BasketItem $basketItem */
-        $basketItem = $this->_updateItem($data);
+    public function updateBasketItem(BasketItem $basketItem, array $data) {
+        /** @var BasketItem $foundBasketItem */
+        $foundBasketItem = $this->_updateItem($basketItem, $data);
 
-        if (empty($basketItem)) {
-            throw new BasketItemNotFound($this->_newInstance($data));
+        if (empty($foundBasketItem)) {
+            throw new BasketItemNotFound($basketItem);
         }
 
-        $basketItem->recalculate();
+        $foundBasketItem->recalculate();
 
-        return $basketItem;
+        return $foundBasketItem;
     }
 
     /**

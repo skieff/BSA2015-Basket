@@ -48,4 +48,10 @@ class Basket extends AbstractItem {
     public static function calculateId($data) {
         return isset($data['id']) ? $data['id'] : '';
     }
+
+    public function update($data)
+    {
+        $this->exchangeArray($this->_parse(array_merge($this->getArrayCopy(), $data)));
+        return $this;
+    }
 }

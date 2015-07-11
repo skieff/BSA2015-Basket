@@ -29,15 +29,16 @@ class BasketManager extends AbstractManager {
     }
 
     /**
+     * @param Basket $basket
      * @param array $data
      * @return Basket
      * @throws BasketNotFound
      */
-    public function updateBasket(array $data) {
-        $foundBasket = $this->_updateItem($data);
+    public function updateBasket(Basket $basket, array $data) {
+        $foundBasket = $this->_updateItem($basket, $data);
 
         if (empty($foundBasket)) {
-            throw new BasketNotFound($this->_newInstance($data));
+            throw new BasketNotFound($basket);
         }
 
         return $foundBasket;

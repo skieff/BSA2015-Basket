@@ -14,7 +14,7 @@ namespace BSA2015\Basket;
  * @property float totalPrice
  */
 class BasketItem extends AbstractItem {
-    public function __construct(array $idOrData = [])
+    public function __construct($idOrData = [])
     {
         $idOrData = is_string($idOrData) ? ['id' => $idOrData] : $idOrData;
 
@@ -60,5 +60,11 @@ class BasketItem extends AbstractItem {
         ];
 
         return implode('/', $parts);
+    }
+
+    public function update($data)
+    {
+        $this->exchangeArray($this->_parse(array_merge($this->getArrayCopy(), $data)));
+        return $this;
     }
 }

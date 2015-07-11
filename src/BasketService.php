@@ -44,12 +44,20 @@ class BasketService {
     }
 
     /**
+     * @param Basket $basket
      * @param array $data
      * @return Basket
      * @throws Exception\BasketNotFound
      */
-    public function updateBasket(array $data) {
-        return $this->_basketManager->updateBasket($data);
+    public function updateBasket(Basket $basket, array $data) {
+        if (isset($data['id'])) {
+            $basketItems = iterator_to_array($this->_basketItemManager->getBasketItems($basket));
+            foreach ($basketItems as $basketItem) {
+                $this->_basketItemManager->updateBasketItem($basketItem, ['basket' => $data['id']]);
+            }
+        }
+
+        return $this->_basketManager->updateBasket($basket, $data);
     }
 
     /**
@@ -63,7 +71,7 @@ class BasketService {
 
     /**
      * @param Basket $basket
-     * @return \CallbackFilterIterator|BasketItem[]
+     * @return array[]
      */
     public function getBasketItems(Basket $basket) {
         return array_map(
@@ -77,12 +85,12 @@ class BasketService {
      * @param Product|string|null $productOrId
      * @return BasketItem
      */
-    public function findBasketItem($basketOrItemData, $productOrId = null) {
+    public function findBasketItem(Basket $basketOrItemData, Product $productOrId) {
         return $this->_basketItemManager->findBasketItem($basketOrItemData, $productOrId);
     }
 
-    public function updateBasketItem(array $data) {
-        return $this->_basketItemManager->updateBasketItem($data);
+    public function updateBasketItem(BasketItem $basketItem, array $data) {
+        return $this->_basketItemManager->updateBasketItem($basketItem, $data);
     }
 
     /**

@@ -30,18 +30,19 @@ class ProductManager extends AbstractManager {
     }
 
     /**
+     * @param Product $product
      * @param array $data
      * @return Product
      * @throws ProductNotFound
      */
-    public function updateProduct(array $data) {
-        $product = $this->_updateItem($data);
+    public function updateProduct(Product $product, array $data) {
+        $foundProduct = $this->_updateItem($product, $data);
 
-        if (empty($product)) {
-            throw new ProductNotFound($data);
+        if (empty($foundProduct)) {
+            throw new ProductNotFound($product);
         }
 
-        return $product;
+        return $foundProduct;
     }
 
     /**

@@ -15,7 +15,7 @@ $basketService->addBasket(['name' => 'basket2']);
 $basketService->addBasket(['name' => 'basket3']);
 
 $basketService->addBasket($basket->getArrayCopy());
-$basketService->updateBasket(['id' => $basket->id, 'total' => 15]);
+$basketService->updateBasket($basket, ['id' => 'basket10', 'total' => 15]);
 
 $apple = $basketService->addProduct(['name' => 'apple', 'price' => 20]);
 $pineapple = $basketService->addProduct(['name' => 'pineapple', 'price' => 50]);
