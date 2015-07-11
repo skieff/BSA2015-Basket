@@ -81,12 +81,15 @@ class BasketService {
     }
 
     /**
-     * @param Basket|array $basketOrItemData
-     * @param Product|string|null $productOrId
+     * @param Basket|string $basketOrId
+     * @param Product|string $productOrId
      * @return BasketItem
      */
-    public function findBasketItem(Basket $basketOrItemData, Product $productOrId) {
-        return $this->_basketItemManager->findBasketItem($basketOrItemData, $productOrId);
+    public function findBasketItem($basketOrId, $productOrId) {
+        $basket = ($basketOrId instanceof Basket) ? $basketOrId : $this->findBasket($basketOrId);
+        $product = ($productOrId instanceof Product) ? $productOrId : $this->findProduct($productOrId);
+
+        return $this->_basketItemManager->findBasketItem($basket, $product);
     }
 
     public function updateBasketItem(BasketItem $basketItem, array $data) {
