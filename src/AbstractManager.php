@@ -2,8 +2,6 @@
 
 namespace BSA2015\Basket;
 
-use BSA2015\Basket\Exception\ProductNotFound;
-
 abstract class AbstractManager {
 
     /**
@@ -57,15 +55,15 @@ abstract class AbstractManager {
         $item = $this->_newInstance($idOrData);
         return isset($this->_storage[$item->getId()]) ? $this->_storage[$item->getId()] : null;
     }
+
     /**
+     * @param AbstractItem $existedItem
      * @param array $data
      * @return AbstractItem|null
-     * @throws ProductNotFound
      */
-    protected function _updateItem(array $data)
+    protected function _updateItem(AbstractItem $existedItem, array $data)
     {
-        $itemId = $this->_getId($data);
-        $foundItem = $this->_getItem($itemId);
+        $foundItem = $this->_getItem($existedItem->getId());
 
         if (empty($foundItem)) {
             return null;

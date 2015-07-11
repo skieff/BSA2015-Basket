@@ -75,9 +75,14 @@ class BasketService {
     /**
      * @param Basket|array $basketOrItemData
      * @param Product|string|null $productOrId
+     * @return BasketItem
      */
     public function findBasketItem($basketOrItemData, $productOrId = null) {
         return $this->_basketItemManager->findBasketItem($basketOrItemData, $productOrId);
+    }
+
+    public function updateBasketItem(array $data) {
+        return $this->_basketItemManager->updateBasketItem($data);
     }
 
     /**
@@ -86,6 +91,15 @@ class BasketService {
      */
     public function addProduct(array $data = []) {
         return $this->_productManager->addProduct($data);
+    }
+
+    /**
+     * @param $idOrData
+     * @return Product
+     * @throws Exception\ProductNotFound
+     */
+    public function findProduct($idOrData) {
+        return $this->_productManager->findProduct($idOrData);
     }
 
     /**
