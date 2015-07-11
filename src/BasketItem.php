@@ -44,7 +44,7 @@ class BasketItem extends AbstractItem {
         (!isset($data['itemsAmount'])) ?: $data['itemsAmount'] = intval($data['itemsAmount']);
         (!isset($data['price'])) ?: $data['price'] = floatval($data['price']);
         (!isset($data['totalPrice'])) ?: $data['totalPrice'] = floatval($data['totalPrice']);
-        (!isset($data['name'])) ?: $data['name'] = (isset($data['product']) ? $data['product'] : '');
+        (isset($data['name'])) ?: $data['name'] = (isset($data['product']) ? $data['product'] : '');
 
         $data['id'] = static::calculateId($data);
 
