@@ -122,7 +122,11 @@ class BasketService {
     }
 
     public function updateBasketItem(BasketItem $basketItem, array $data) {
-        return $this->_basketItemManager->updateBasketItem($basketItem, $data);
+        $foundBasketItem = $this->_basketItemManager->updateBasketItem($basketItem, $data);
+        $basket = $this->findBasket($foundBasketItem->basket);
+
+        $this->_basketManager->recalculateBasket($basket, $this->_basketItemManager->getBasketItems($basket));
+        return $foundBasketItem;
     }
 
 
