@@ -10,6 +10,7 @@ class BasketItemManager extends AbstractManager {
         $data = [
             'basket' => $basket->getId(),
             'product' => $product->getId(),
+            'name' => $product->name,
             'price' => $product->price,
         ];
 
